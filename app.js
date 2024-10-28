@@ -100,14 +100,26 @@ app.readFolder = () => {
     for (let index = 0; index < res.length; index++) {
       const element = res[index];
 
+      function type() {
+        const ext = element.split(".")[element.split(".").length - 1];
+
+        if (ext === "txt" || ext === "pdf" || ext === "md") {
+          return "text";
+        } else if (ext === "jpg" || ext === "png") {
+          return "image";
+        } else {
+          return "undefined";
+        }
+      }
+
       try {
         const stat = fs.statSync(__dirname + `/${folderName}` + "/" + element);
-
+        const date = stat.birthtime.toString();
         output.push({
           namaFile: element,
           extensi: element.split(".")[1],
-          jenisFile: "",
-          tanggalDibuat: stat.birthtime,
+          jenisFile: type(),
+          tanggalDibuat: date.slice(0, -42),
           ukuranFile: stat.size.toString() + " kb",
         });
       } catch (error) {
