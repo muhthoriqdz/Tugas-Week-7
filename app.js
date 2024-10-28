@@ -46,6 +46,7 @@ app.extSorter = () => {
   for (let index = 0; index < res.length; index++) {
     const element = res[index];
     const ext = element.split(".")[element.split(".").length - 1];
+    // text
     if (["txt", "pdf", "md"].includes(ext)) {
       fs.mkdir(__dirname + `/text`, () => {
         console.log("success created new folder text");
@@ -59,6 +60,7 @@ app.extSorter = () => {
         );
       });
     } else if (["jpg", "png"].includes(ext)) {
+      // image
       fs.mkdir(__dirname + `/image`, () => {
         console.log("success created new folder image");
         fs.rename(
@@ -71,6 +73,7 @@ app.extSorter = () => {
         );
       });
     } else {
+      // lainnya
       fs.mkdir(__dirname + `/undefined_type`, () => {
         console.log("success created new folder undifined type");
         fs.rename(
