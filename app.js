@@ -131,4 +131,17 @@ app.readFolder = () => {
   });
 };
 
+// * **read-file** : digunakan untuk membaca isi dari sebuah file.
+app.readFile = () => {
+  rl.question("Masukan Nama Folder : ", (folder) => {
+    rl.question("Masukan Nama File : ", (file) => {
+      const doc = `${folder}/${file}`;
+      const read = fs.readFileSync(doc, "utf-8");
+
+      console.log(read);
+      rl.close();
+    });
+  });
+};
+
 module.exports = app;
