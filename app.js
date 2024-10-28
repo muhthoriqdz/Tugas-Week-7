@@ -26,6 +26,12 @@ app.makeFile = () => {
     rl.question("Masukan Nama File : ", (file) => {
       rl.question("Masukan Nama Extension : ", (ext) => {
         console.log(folder, file, ext);
+
+        //jikadirectory/folder tidak ada
+        if (!fs.existsSync(folder)) {
+          // sebuah metod untuk membuat folder
+          fs.mkdirSync(folder);
+        }
         fs.writeFileSync(`${folder}/${file}.${ext}`, "");
         rl.close();
       });
