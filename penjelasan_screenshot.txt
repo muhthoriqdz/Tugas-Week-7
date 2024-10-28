@@ -1,0 +1,14 @@
+1. git init, git status dan clone ke github
+2. buat branch result dan beralih ke branch result
+3. mengedit script di package.json
+4. edit command di index json
+5. berhasil membuat program make file
+6. membuat file ext sorter
+7. berhasil membuat program ext-sorter
+8. menandai perubahan di git dan push ke github tentang program ext sorter
+9. mencoba buat program read folder, kemudian di commit dan diujicoba
+10. menambahkan program read folder untuk jenis file dan tanggal dibuat
+11. git add, commit dan push
+12. ujicoba program read file, berhasil
+13. git add, commit dan push
+14. ujicoba kembali program make file. memastikan sajaa
