@@ -1,31 +1,147 @@
-const app = require("./app");
+const fs = require("node:fs");
+const readline = require("node:readline");
 
-const args = process.argv.slice(2);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-const command = args[0];
+const app = {};
 
-switch (command) {
-  case "make-folder":
-    app.makeFolder();
-    break;
+// contoh script pembuatan folder
+app.makeFolder = () => {
+  rl.question("Masukan Nama Folder : ", (folderName) => {
+    fs.mkdir(__dirname + `/${folderName}`, () => {
+      console.log("success created new folder");
+    });
+    rl.close();
+  });
+};
 
-  case "make-file":
-    app.makeFile();
-    break;
+// To Do : lanjutkan pembuatan logic disini
 
-  case "ext-sorter":
-    app.extSorter();
-    break;
+// * **make-file** : digunakan untuk membuat sebuah file
+app.makeFile = () => {
+  rl.question("Masukan Nama Folder : ", (folder) => {
+    rl.question("Masukan Nama File : ", (file) => {
+      rl.question("Masukan Nama Extension : ", (ext) => {
+        console.log(folder, file, ext);
 
-  case "read-folder":
-    app.readFolder();
-    break;
+        //jikadirectory/folder tidak ada
+        if (!fs.existsSync(folder)) {
+          // sebuah metod untuk membuat folder
+          fs.mkdirSync(folder);
+        }
+        fs.writeFileSync(`${folder}/${file}.${ext}`, "");
+        rl.close();
+      });
+    });
+  });
+};
 
-  case "read-file":
-    app.readFile();
-    break;
+app.extSorter = () => {
+  const res = fs.readdirSync("unorganize_folder");
+  console.log(res);
 
-  default:
-    throw Error("Invalid command");
-    break;
-}
+  for (let index = 0; index < res.length; index++) {
+    const element = res[index];
+    const ext = element.split(".")[element.split(".").length - 1];
+    // text
+    if (["txt", "pdf", "md"].includes(ext)) {
+      fs.mkdir(__dirname + `/text`, () => {
+        console.log("success created new folder text");
+        fs.rename(
+          __dirname + `/unorganize_folder` + "/" + element,
+          __dirname + `/text` + "/" + element,
+          (err) => {
+            if (err) throw err;
+            console.log("Rename text complete!");
+          }
+        );
+      });
+    } else if (["jpg", "png"].includes(ext)) {
+      // image
+      fs.mkdir(__dirname + `/image`, () => {
+        console.log("success created new folder image");
+        fs.rename(
+          __dirname + `/unorganize_folder` + "/" + element,
+          __dirname + `/image` + "/" + element,
+          (err) => {
+            if (err) throw err;
+            console.log("Rename Image complete!");
+          }
+        );
+      });
+    } else {
+      // lainnya
+      fs.mkdir(__dirname + `/undefined_type`, () => {
+        console.log("success created new folder undifined type");
+        fs.rename(
+          __dirname + `/unorganize_folder` + "/" + element,
+          __dirname + `/undefined_type` + "/" + element,
+          (err) => {
+            if (err) throw err;
+            console.log("Rename undefined type complete!");
+          }
+        );
+      });
+    }
+  }
+  rl.close();
+  return;
+};
+
+// * **read-folder** : digunakan untuk membaca sebuah folder.
+app.readFolder = () => {
+  rl.question("Masukkan Nama Folder yang ingin dibaca : ", (folderName) => {
+    // list file
+    const res = fs.readdirSync(folderName);
+    const output = [];
+    for (let index = 0; index < res.length; index++) {
+      const element = res[index];
+
+      function type() {
+        const ext = element.split(".")[element.split(".").length - 1];
+
+        if (ext === "txt" || ext === "pdf" || ext === "md") {
+          return "text";
+        } else if (ext === "jpg" || ext === "png") {
+          return "image";
+        } else {
+          return "undefined";
+        }
+      }
+
+      try {
+        const stat = fs.statSync(__dirname + `/${folderName}` + "/" + element);
+        const date = stat.birthtime.toString();
+        output.push({
+          namaFile: element,
+          extensi: element.split(".")[1],
+          jenisFile: type(),
+          tanggalDibuat: date.slice(0, -42),
+          ukuranFile: stat.size.toString() + " kb",
+        });
+      } catch (error) {
+        console.log("gagal membaca file", folderName, element);
+      }
+    }
+    console.log(output);
+    rl.close();
+  });
+};
+
+// * **read-file** : digunakan untuk membaca isi dari sebuah file.
+app.readFile = () => {
+  rl.question("Masukan Nama Folder : ", (folder) => {
+    rl.question("Masukan Nama File : ", (file) => {
+      const doc = `${folder}/${file}`;
+      const read = fs.readFileSync(doc, "utf-8");
+
+      console.log(read);
+      rl.close();
+    });
+  });
+};
+
+module.exports = app;
