@@ -39,4 +39,53 @@ app.makeFile = () => {
   });
 };
 
+app.extSorter = () => {
+  const res = fs.readdirSync("unorganize_folder");
+  console.log(res);
+
+  for (let index = 0; index < res.length; index++) {
+    const element = res[index];
+    const ext = element.split(".")[element.split(".").length - 1];
+    if (["txt", "pdf", "md"].includes(ext)) {
+      fs.mkdir(__dirname + `/text`, () => {
+        console.log("success created new folder text");
+        fs.rename(
+          __dirname + `/unorganize_folder` + "/" + element,
+          __dirname + `/text` + "/" + element,
+          (err) => {
+            if (err) throw err;
+            console.log("Rename text complete!");
+          }
+        );
+      });
+    } else if (["jpg", "png"].includes(ext)) {
+      fs.mkdir(__dirname + `/image`, () => {
+        console.log("success created new folder image");
+        fs.rename(
+          __dirname + `/unorganize_folder` + "/" + element,
+          __dirname + `/image` + "/" + element,
+          (err) => {
+            if (err) throw err;
+            console.log("Rename Image complete!");
+          }
+        );
+      });
+    } else {
+      fs.mkdir(__dirname + `/undefined_type`, () => {
+        console.log("success created new folder undifined type");
+        fs.rename(
+          __dirname + `/unorganize_folder` + "/" + element,
+          __dirname + `/undefined_type` + "/" + element,
+          (err) => {
+            if (err) throw err;
+            console.log("Rename undefined type complete!");
+          }
+        );
+      });
+    }
+  }
+  rl.close();
+  return;
+};
+
 module.exports = app;
