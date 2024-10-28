@@ -1,23 +1,31 @@
-const fs = require("node:fs");
-const readline = require("node:readline");
+const app = require("./app");
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const args = process.argv.slice(2);
 
-const app = {};
+const command = args[0];
 
-// contoh script pembuatan folder
-app.makeFolder = () => {
-  rl.question("Masukan Nama Folder : ", (folderName) => {
-    fs.mkdir(__dirname + `/${folderName}`, () => {
-      console.log("success created new folder");
-    });
-    rl.close();
-  });
-};
+switch (command) {
+  case "make-folder":
+    app.makeFolder();
+    break;
 
-// To Do : lanjutkan pembuatan logic disini
+  case "make-file":
+    app.makeFile();
+    break;
 
-module.exports = app;
+  case "ext-sorter":
+    app.extSorter();
+    break;
+
+  case "read-folder":
+    app.readFolder();
+    break;
+
+  case "read-file":
+    app.readFile();
+    break;
+
+  default:
+    throw Error("Invalid command");
+    break;
+}
