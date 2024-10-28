@@ -91,4 +91,32 @@ app.extSorter = () => {
   return;
 };
 
+// * **read-folder** : digunakan untuk membaca sebuah folder.
+app.readFolder = () => {
+  rl.question("Masukkan Nama Folder yang ingin dibaca : ", (folderName) => {
+    // list file
+    const res = fs.readdirSync(folderName);
+    const output = [];
+    for (let index = 0; index < res.length; index++) {
+      const element = res[index];
+
+      try {
+        const stat = fs.statSync(__dirname + `/${folderName}` + "/" + element);
+
+        output.push({
+          namaFile: element,
+          extensi: element.split(".")[1],
+          jenisFile: "",
+          tanggalDibuat: stat.birthtime,
+          ukuranFile: stat.size.toString() + " kb",
+        });
+      } catch (error) {
+        console.log("gagal membaca file", folderName, element);
+      }
+    }
+    console.log(output);
+    rl.close();
+  });
+};
+
 module.exports = app;
